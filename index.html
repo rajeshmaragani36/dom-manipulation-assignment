@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Digital Detective</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:600px;
+    margin:auto;
+    background:#1e293b;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(255,255,255,0.2);
+}
+
+h1{
+    color:#38bdf8;
+}
+
+input{
+    width:80%;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    margin-top:10px;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+#hint{
+    color:yellow;
+    margin-top:10px;
+}
+
+#message{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🕵️ Digital Detective</h1>
+
+<h3 id="timer">Time Left: 60s</h3>
+
+<h3 id="score">Score: 0</h3>
+
+<h2 id="question"></h2>
+
+<input type="text" id="answer" placeholder="Enter your answer">
+
+<br><br>
+
+<button onclick="checkAnswer()">Submit</button>
+
+<button onclick="showHint()">Hint</button>
+
+<button onclick="restartGame()">Restart</button>
+
+<p id="hint"></p>
+
+<p id="message"></p>
+
+</div>
+
+<script>
+
+const puzzles = [
+
+{
+question:"I speak without a mouth and hear without ears. What am I?",
+answer:"echo",
+hint:"You can hear me in mountains."
+},
+
+{
+question:"What has keys but cannot open locks?",
+answer:"keyboard",
+hint:"You use it with a computer."
+},
+
+{
+question:"What comes once in a minute, twice in a moment and never in a thousand years?",
+answer:"m",
+hint:"It is a letter."
+}
+
+];
+
+let currentPuzzle = 0;
+let score = 0;
+let timeLeft = 60;
+
+const question = document.getElementById("question");
+const scoreText = document.getElementById("score");
+const timerText = document.getElementById("timer");
+
+function loadPuzzle(){
+
+    question.innerText =
+    puzzles[currentPuzzle].question;
+
+    document.getElementById("answer").value = "";
+
+    document.getElementById("hint").innerText = "";
+}
+
+loadPuzzle();
+
+function checkAnswer(){
+
+    let userAnswer =
+    document.getElementById("answer")
+    .value
+    .toLowerCase()
+    .trim();
+
+    if(userAnswer === puzzles[currentPuzzle].answer){
+
+        score += 10;
+
+        scoreText.innerText =
+        "Score: " + score;
+
+        currentPuzzle++;
+
+        if(currentPuzzle < puzzles.length){
+
+            loadPuzzle();
+
+        }else{
+
+            showResult();
+        }
+
+    }else{
+
+        alert("Wrong Answer Detective! 🔍");
+    }
+}
+
+function showHint(){
+
+    document.getElementById("hint").innerText =
+    "Hint: " +
+    puzzles[currentPuzzle].hint;
+}
+
+function showResult(){
+
+    let rank = "";
+
+    if(score === 30){
+
+        rank = "Master Detective 🏆";
+
+    }else if(score >= 20){
+
+        rank = "Senior Detective 🔍";
+
+    }else{
+
+        rank = "Rookie Detective 🕵️";
+    }
+
+    document.getElementById("message").innerHTML =
+    "Case Solved!<br>" +
+    "Final Score: " + score +
+    "<br>Rank: " + rank;
+}
+
+function restartGame(){
+
+    currentPuzzle = 0;
+
+    score = 0;
+
+    timeLeft = 60;
+
+    scoreText.innerText =
+    "Score: 0";
+
+    timerText.innerText =
+    "Time Left: 60s";
+
+    document.getElementById("message").innerText = "";
+
+    loadPuzzle();
+}
+
+setInterval(function(){
+
+    timeLeft--;
+
+    timerText.innerText =
+    "Time Left: " + timeLeft + "s";
+
+    if(timeLeft <= 0){
+
+        alert("⏰ Time Up Detective!");
+
+        showResult();
+
+        timeLeft = 60;
+    }
+
+},1000);
+
+</script>
+
+</body>
+</html>
